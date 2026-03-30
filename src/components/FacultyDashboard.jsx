@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, LineChart, ChevronLeft } from 'lucide-react';
+import { LayoutDashboard, Users, LineChart, ChevronLeft, ShieldAlert } from 'lucide-react';
 
 import AcademicPerformance from './AcademicPerformance';
 import AttendanceMonitoring from './AttendanceMonitoring';
 import InternalMarksAnalysis from './InternalMarksAnalysis';
+import RiskAndSegmentation from './RiskAndSegmentation';
 
 export default function FacultyDashboard() {
   const [studentsData, setStudentsData] = useState([]);
@@ -23,14 +24,10 @@ export default function FacultyDashboard() {
       }
     }
 
-    // Parse the CSV from public folder/external.
-    // For Vite, we can fetch it if it's in public/ or if imported directly 
-    // Since class.csv is in mentora/data/class.csv, we might need to import it as a URL 
-    // or fetch it directly. Let's assume it's moved or accessible via fetch.
-    // We will simulate fetching the file from a known location:
-    import('../../data/class.csv?raw')
-      .then((res) => {
-        Papa.parse(res.default, {
+    fetch('/data/class.csv')
+      .then((res) => res.text())
+      .then((csvText) => {
+        Papa.parse(csvText, {
           header: true,
           dynamicTyping: true,
           skipEmptyLines: true,
@@ -63,6 +60,7 @@ export default function FacultyDashboard() {
     { path: '/faculty/dashboard', label: 'Academic Performance', icon: <LayoutDashboard size={20} /> },
     { path: '/faculty/dashboard/attendance', label: 'Attendance Monitoring', icon: <Users size={20} /> },
     { path: '/faculty/dashboard/marks', label: 'Internal Marks Analysis', icon: <LineChart size={20} /> },
+    { path: '/faculty/dashboard/risk', label: 'Risk & Segmentation', icon: <ShieldAlert size={20} /> },
   ];
 
   return (
@@ -80,9 +78,9 @@ export default function FacultyDashboard() {
         <nav className="sidebar-nav">
           {navItems.map((item) => (
              <Link 
-               key={item.path} 
-               to={item.path}
-               className={`nav-item ${location.pathname === item.path || (location.pathname === '/faculty/' && item.path === '/faculty') ? 'active' : ''}`}
+                key={item.path} 
+                to={item.path}
+                className={`nav-item ${location.pathname === item.path || (location.pathname === '/faculty/' && item.path === '/faculty') ? 'active' : ''}`}
              >
                {item.icon}
                <span>{item.label}</span>
@@ -117,6 +115,7 @@ export default function FacultyDashboard() {
             <Route path="/" element={<AcademicPerformance data={studentsData} />} />
             <Route path="/attendance" element={<AttendanceMonitoring data={studentsData} />} />
             <Route path="/marks" element={<InternalMarksAnalysis data={studentsData} />} />
+            <Route path="/risk" element={<RiskAndSegmentation data={studentsData} />} />
           </Routes>
         </div>
       </main>

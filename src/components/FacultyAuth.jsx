@@ -154,7 +154,7 @@ export default function FacultyAuth() {
 
         {isLogin ? (
           <form className="auth-form" onSubmit={handleLogin}>
-            <div className="auth-field">
+            <div className="auth-field mb-4">
               <label htmlFor="faculty-login-email">Email</label>
               <input
                 id="faculty-login-email"
@@ -168,7 +168,7 @@ export default function FacultyAuth() {
               />
             </div>
 
-            <div className="auth-field">
+            <div className="auth-field mb-6">
               <label htmlFor="faculty-login-password">Password</label>
               <input
                 id="faculty-login-password"
@@ -195,7 +195,7 @@ export default function FacultyAuth() {
           </form>
         ) : (
           <form className="auth-form" onSubmit={handleSignup}>
-            <div className="auth-field">
+            <div className="auth-field mb-3">
               <label htmlFor="faculty-name">Full Name</label>
               <input
                 id="faculty-name"
@@ -208,7 +208,7 @@ export default function FacultyAuth() {
               />
             </div>
 
-            <div className="auth-field">
+            <div className="auth-field mb-3">
               <label htmlFor="faculty-email">Official Email</label>
               <input
                 id="faculty-email"
@@ -221,7 +221,7 @@ export default function FacultyAuth() {
               />
             </div>
 
-            <div className="auth-field">
+            <div className="auth-field mb-3">
               <label htmlFor="faculty-department">Department</label>
               <input
                 id="faculty-department"
@@ -234,7 +234,7 @@ export default function FacultyAuth() {
               />
             </div>
 
-            <div className="auth-field">
+            <div className="auth-field mb-6">
               <label htmlFor="faculty-password">Create Password</label>
               <input
                 id="faculty-password"
