@@ -51,6 +51,17 @@ export default function AdminDashboard() {
 
     try {
       if (approve) {
+        // First check if the email already exists to prevent vague 409 conflict errors
+        const { data: existingUser } = await supabase
+          .from(FACULTY_LOGIN_TABLE)
+          .select('email')
+          .eq('email', request.email)
+          .maybeSingle();
+
+        if (existingUser) {
+          throw new Error('A user with this email address already exists. Please reject this duplicate request.');
+        }
+
         const { error: insertError } = await supabase
           .from(FACULTY_LOGIN_TABLE)
           .insert([
@@ -62,7 +73,12 @@ export default function AdminDashboard() {
             },
           ]);
 
-        if (insertError) throw insertError;
+        if (insertError) {
+          if (insertError.code === '23505') {
+            throw new Error('A user with this email or username already exists. Please reject this duplicate request.');
+          }
+          throw insertError;
+        }
       }
 
       const { error: deleteError } = await supabase
@@ -76,7 +92,7 @@ export default function AdminDashboard() {
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error(err);
-      setError('Action failed. Please verify your Supabase tables and try again.');
+      setError(err.message || 'Action failed. Please verify your Supabase tables and try again.');
     } finally {
       setActionId(null);
     }
